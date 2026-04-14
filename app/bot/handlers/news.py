@@ -1,12 +1,13 @@
 from aiogram import Router
 from aiogram.types import Message
+from aiogram.filters import Command 
 
 from app.services.news_service import NewsService
 
 router = Router()
 
 
-@router.message(commands=["news"])
+@router.message(Command("news"))
 async def get_news(message: Message):
 
     service = NewsService()
