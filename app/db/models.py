@@ -1,44 +1,57 @@
-users:
-id
-telegram_id
-username
-created_at
+import datetime
+from sqlalchemy.orm import DeclarativeBase, relationship, declarative_base
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    ForeignKey,
+    DateTime
+)
 
-news_sources
-id
-name
-url
-is_active
+class Base(DeclarativeBase):
+    pass
 
-Пример:
+class User(Base):
 
-1 Bloomberg
-2 Kommersant
-3 Reuters
-4 Vedomosti
+    __tablename__ = "users"
 
+    id = Column(Integer, primary_key=True)
+    telegram_id = Column(Integer, unique=True)
+    username = Column(String)
 
-news
-id
-title
-url
-source_id
-published_at
-created_at
-
-Важно:
-
-новости должны браться из БД, а не с сайта при запросе пользователя.
-
-subscriptions
-id
-user_id
-source_id
-created_at
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
 
-user_settings
-id
-user_id
-default_source_id
-news_limit
+class Source(Base):
+
+    __tablename__ = "sources"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    url = Column(String)
+
+
+class News(Base):
+
+    __tablename__ = "news"
+
+    id = Column(Integer, primary_key=True)
+
+    title = Column(String)
+    url = Column(String)
+
+    source_id = Column(Integer, ForeignKey("sources.id"))
+
+    published_at = Column(DateTime)
+
+    source = relationship("Source")
+
+
+class Subscription(Base):
+
+    __tablename__ = "subscriptions"
+
+    id = Column(Integer, primary_key=True)
+
+    user_id = Column(Integer, ForeignKey("users.id"))
+    source_id = Column(Integer, ForeignKey("sources.id"))
