@@ -45,14 +45,14 @@ class NewsService:
                         url=item.get("source_url", f"https://{item['source']}.com")
                     )
                     session.add(source)
-                    await session.flush()  # Получаем ID источника
+                    await session.flush()
                 
                 # Создаем новость с правильным source_id
                 news = News(
                     title=item["title"],
                     url=item["url"],
                     source_id=source.id,
-                    published_at=item.get("published_at")  # если есть дата
+                    published_at=item.get("published_at")
                 )
 
                 session.add(news)

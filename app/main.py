@@ -4,7 +4,7 @@ import logging
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 
-from app.bot.handlers import start, news
+from app.bot.handlers import start, news, subscriptions
 from app.scheduler.scheduler import start_scheduler
 from config import settings
 
@@ -22,6 +22,7 @@ async def main():
 
         dp.include_router(start.router)
         dp.include_router(news.router)
+        dp.include_router(subscriptions.router)
 
         start_scheduler()
 

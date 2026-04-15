@@ -10,7 +10,10 @@ router = Router()
 async def start(message: Message):
 
     await message.answer(
-        "Бот новостей.\n"
+        "Бот новостей\n\n"
         "Команды:\n"
-        "/news - последние новости"
+        "/news - последние новости\n"
+        "/subscribe <source>\n"
+        "/subscriptions\n"
+        "/unsubscribe <source>"
     )
