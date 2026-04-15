@@ -7,6 +7,7 @@ from aiogram.types import Message
 from aiogram.filters import Command
 
 from app.services.news_service import NewsService
+from app.utils.url_utils import get_domain
 
 router = Router()
 
@@ -30,9 +31,12 @@ async def get_news(message: Message):
         return
 
     text = ""
-
+    
     for n in news_list:
+        
+        domain = get_domain(n.url)
+        
         text += f"<b>{n.title}</b>\n"
-        text += f"{n.url}\n\n"
+        text += f"{domain}\n\n"
     
     await message.answer(text, parse_mode="HTML")
