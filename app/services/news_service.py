@@ -25,7 +25,16 @@ class NewsService:
         async with async_session() as session:
 
             for item in news_list:
+                
+                query = select(News).where(News.url == item["url"])
+                
+                result = await session.execute(query)
 
+                exists = result.scalar()
+
+                if exists:
+                    continue
+                
                 news = News(
                     title=item["title"],
                     url=item["url"],
