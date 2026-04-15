@@ -1,29 +1,30 @@
+from app.parsers.base import BaseParser
 import httpx
 from bs4 import BeautifulSoup
 
 
-URL = "https://www.kommersant.ru"
+class KommersantParser(BaseParser):
 
+    base_url = "https://www.kommersant.ru"
 
-async def fetch_news():
+    async def fetch_news(self):
 
-    async with httpx.AsyncClient() as client:
-        r = await client.get(URL)
+        async with httpx.AsyncClient() as client:
+            r = await client.get(self.base_url)
 
-    soup = BeautifulSoup(r.text, "html.parser")
+        soup = BeautifulSoup(r.text, "html.parser")
 
-    result = []
+        news = []
 
-    for item in soup.select(".uho__link")[:10]:
+        for item in soup.select(".uho__link")[:10]:
 
-        title = item.text.strip()
-        link = "https://www.kommersant.ru" + item["href"]
+            title = item.text.strip()
+            link = self.base_url + item["href"]
 
-        result.append(
-            {
+            news.append({
                 "title": title,
-                "url": link
-            }
-        )
+                "url": link,
+                "source": "kommersant"
+            })
 
-    return result
+        return news

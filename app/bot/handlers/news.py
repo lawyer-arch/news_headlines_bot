@@ -21,6 +21,7 @@ async def get_news(message: Message):
     text = ""
     
     for n in news_list:
-        text += f"{n.title}\n{n.url}\n\n"
+        text += f"<b>{n.title}</b>\n"
+        text += f"{n.url}\n\n"
     
     await message.answer(text)

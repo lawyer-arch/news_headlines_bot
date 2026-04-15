@@ -4,11 +4,11 @@ from bs4 import BeautifulSoup
 from app.parsers.base import BaseParser
 
 
-class BloombergParser(BaseParser):
+class ReutersParser(BaseParser):
 
     source_name = "reuters"
-    base_url = "https://www.bloomberg.com"
-    
+    base_url = "https://www.reuters.com"
+
     async def fetch_news(self):
 
         async with httpx.AsyncClient() as client:
@@ -18,7 +18,7 @@ class BloombergParser(BaseParser):
 
         news = []
 
-        for item in soup.select(".story-package-module__story__H6Blv a")[:10]:
+        for item in soup.select("a[data-testid='Heading']")[:10]:
 
             title = item.text.strip()
             link = self.base_url + item["href"]
@@ -27,7 +27,7 @@ class BloombergParser(BaseParser):
                 {
                     "title": title,
                     "url": link,
-                    "source": "bloomberg"
+                    "source": "reuters"
                 }
             )
 

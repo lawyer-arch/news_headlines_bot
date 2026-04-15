@@ -9,16 +9,16 @@ from app.scheduler.scheduler import start_scheduler
 from config import settings
 
 
+dp = Dispatcher()
+
 async def main():
-    
+
     logging.basicConfig(level=logging.INFO)
     async with Bot(
         token=settings.BOT_TOKEN,
         default=DefaultBotProperties(parse_mode="HTML")
     ) as bot:
-        
-        dp = Dispatcher()
-    
+
         dp.include_router(start.router)
         dp.include_router(news.router)
 

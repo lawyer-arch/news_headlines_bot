@@ -4,6 +4,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN pip install -r pyproject.toml
+RUN pip install --no-cache-dir .
 
 CMD ["python", "-m", "app.main"]
