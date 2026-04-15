@@ -11,6 +11,7 @@ from config import settings
 
 dp = Dispatcher()
 
+
 async def main():
 
     logging.basicConfig(level=logging.INFO)

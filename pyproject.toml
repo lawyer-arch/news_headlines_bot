@@ -17,6 +17,7 @@ dependencies = [
     "pydantic>=2.6",
     "pydantic-settings>=2.2",
     "psycopg2-binary>=2.9",
+    "rss-parser>=2.1.1",
 ]
 
 [project.optional-dependencies]
