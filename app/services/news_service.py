@@ -19,3 +19,19 @@ class NewsService:
             result = await session.execute(query)
 
             return result.scalars().all()
+
+    async def save_news(self, news_list):
+
+        async with async_session() as session:
+
+            for item in news_list:
+
+                news = News(
+                    title=item["title"],
+                    url=item["url"],
+                    source_id=1
+                )
+
+                session.add(news)
+
+            await session.commit()
