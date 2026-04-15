@@ -22,11 +22,12 @@ async def update_news():
         logging.exception(f"update_news failed: {e}")
 
 
+# параметр minutes=10 отвечает за частоту запросов
 def start_scheduler():
     scheduler.add_job(
         update_news,
         "interval",
-        minutes=5,
+        minutes=10,
         id="update_news_job",
         replace_existing=True,
         coalesce=True,

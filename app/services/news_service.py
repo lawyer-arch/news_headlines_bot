@@ -1,7 +1,7 @@
 from sqlalchemy import select
 
 from app.db.session import async_session
-from app.db.models import News
+from app.db.models import News, Source
 
 
 class NewsService:
@@ -25,20 +25,34 @@ class NewsService:
         async with async_session() as session:
 
             for item in news_list:
-                
+                # Проверяем, есть ли уже такая новость
                 query = select(News).where(News.url == item["url"])
-                
                 result = await session.execute(query)
-
                 exists = result.scalar()
 
                 if exists:
                     continue
                 
+                # Ищем источник по имени
+                source_query = select(Source).where(Source.name == item["source"])
+                source_result = await session.execute(source_query)
+                source = source_result.scalar_one_or_none()
+                
+                if not source:
+                    # Если источника нет, создаем
+                    source = Source(
+                        name=item["source"],
+                        url=item.get("source_url", f"https://{item['source']}.com")
+                    )
+                    session.add(source)
+                    await session.flush()  # Получаем ID источника
+                
+                # Создаем новость с правильным source_id
                 news = News(
                     title=item["title"],
                     url=item["url"],
-                    source_id=1
+                    source_id=source.id,
+                    published_at=item.get("published_at")  # если есть дата
                 )
 
                 session.add(news)

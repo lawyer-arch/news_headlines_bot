@@ -1,13 +1,17 @@
 import asyncio
 
 from app.parsers.kommersant import KommersantParser
-from app.parsers.reuters import ReutersParser
-from app.parsers.bloomberg import BloombergParser
+from app.parsers.rbk import RBKParser
+#from app.parsers.bloomberg import BloombergParser
+from app.parsers.fox_business import FoxBusinessParser
+from app.parsers.ria import RIAParser
 
 PARSERS = [
     KommersantParser(),
-    ReutersParser(),
-    BloombergParser(),
+    RBKParser(),
+    FoxBusinessParser(),
+    RIAParser(),
+    # BloombergParser(),
 ]
 
 

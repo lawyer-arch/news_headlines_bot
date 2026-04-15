@@ -4,7 +4,8 @@ from bs4 import BeautifulSoup
 
 
 class KommersantParser(BaseParser):
-
+    
+    source_name = "kommersant"
     base_url = "https://www.kommersant.ru"
 
     async def fetch_news(self):
@@ -24,7 +25,7 @@ class KommersantParser(BaseParser):
             news.append({
                 "title": title,
                 "url": link,
-                "source": "kommersant"
+                "source": self.source_name
             })
 
         return news
