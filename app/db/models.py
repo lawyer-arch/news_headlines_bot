@@ -5,18 +5,21 @@ from sqlalchemy import (
     Integer,
     String,
     ForeignKey,
-    DateTime
+    DateTime,
+    BigInteger
 )
+
 
 class Base(DeclarativeBase):
     pass
+
 
 class User(Base):
 
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
-    telegram_id = Column(Integer, unique=True)
+    telegram_id = Column(BigInteger, unique=True, nullable=False)
     username = Column(String)
 
     created_at = Column(DateTime, default=datetime.datetime.utcnow)

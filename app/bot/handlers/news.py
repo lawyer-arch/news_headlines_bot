@@ -24,4 +24,4 @@ async def get_news(message: Message):
         text += f"<b>{n.title}</b>\n"
         text += f"{n.url}\n\n"
     
-    await message.answer(text)
+    await message.answer(text, parse_mode="HTML")

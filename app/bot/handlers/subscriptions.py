@@ -17,9 +17,12 @@ async def subscribe(message: Message):
     if len(args) < 2:
         await message.answer(
             "Использование:\n"
-            "/subscribe <источник>\n\n"
+            "Команда - /subscribe 'источник'\n"
+            "позволяет выбрать подписку на новости\n"
+            "из следующих источников:\n"
+            "Fox Bussiness, Kommersant, RBK, RIA\n\n"
             "Пример:\n"
-            "/subscribe rbk"
+            "/subscribe rbk, fox_business, kommersant, ria"
         )
         return
 
@@ -60,7 +63,7 @@ async def unsubscribe(message: Message):
     if len(args) < 2:
         await message.answer(
             "Использование:\n"
-            "/unsubscribe <источник>"
+            "/unsubscribe 'источник'"
         )
         return
 

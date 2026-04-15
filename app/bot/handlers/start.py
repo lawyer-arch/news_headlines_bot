@@ -8,12 +8,17 @@ router = Router()
 
 @router.message(Command("start"))
 async def start(message: Message):
-
-    await message.answer(
+    
+    text = (
         "Бот новостей\n\n"
         "Команды:\n"
         "/news - последние новости\n"
-        "/subscribe <source>\n"
+        "/subscribe\n"
         "/subscriptions\n"
-        "/unsubscribe <source>"
+        "/unsubscribe"
+    )
+    
+    await message.answer(
+        text,
+        parse_mode="HTML"
     )

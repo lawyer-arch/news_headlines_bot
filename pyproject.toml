@@ -30,6 +30,5 @@ build-backend = "setuptools.build_meta"
 
 # Если Alembic пытается читать этот файл
 [tool.alembic]
-# Указываем, что конфиг в alembic.ini, не читать этот файл
 alembic_ini_path = "alembic.ini"
-EOF
+version_path = "migrations/versions"
