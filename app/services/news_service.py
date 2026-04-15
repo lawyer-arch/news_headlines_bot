@@ -6,7 +6,7 @@ from app.db.models import News, Source
 
 class NewsService:
 
-    async def get_latest_news(self, limit=10):
+    async def get_latest_news(self, limit=10, source_name=None):
 
         async with async_session() as session:
 
@@ -16,6 +16,15 @@ class NewsService:
                 .limit(limit)
             )
 
+            if source_name and source_name != "all":
+
+                query = (
+                    query.join(Source)
+                    .where(Source.name == source_name)
+                )
+
+            query = query.limit(limit)
+
             result = await session.execute(query)
 
             return result.scalars().all()
@@ -24,30 +33,32 @@ class NewsService:
 
         async with async_session() as session:
 
+            new_news = []
+
             for item in news_list:
-                # Проверяем, есть ли уже такая новость
+ 
                 query = select(News).where(News.url == item["url"])
                 result = await session.execute(query)
-                exists = result.scalar()
+
+                exists = result.scalar_one_or_none()
 
                 if exists:
                     continue
-                
-                # Ищем источник по имени
-                source_query = select(Source).where(Source.name == item["source"])
+
+                source_query = select(Source).where(
+                    Source.name == item["source"]
+                    )
                 source_result = await session.execute(source_query)
                 source = source_result.scalar_one_or_none()
-                
+
                 if not source:
-                    # Если источника нет, создаем
                     source = Source(
                         name=item["source"],
-                        url=item.get("source_url", f"https://{item['source']}.com")
+                        url=item.get("source_url", "")
                     )
                     session.add(source)
                     await session.flush()
-                
-                # Создаем новость с правильным source_id
+
                 news = News(
                     title=item["title"],
                     url=item["url"],
@@ -57,4 +68,8 @@ class NewsService:
 
                 session.add(news)
 
+                new_news.append(news)
+
             await session.commit()
+
+            return new_news

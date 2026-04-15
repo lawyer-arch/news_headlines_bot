@@ -4,7 +4,7 @@ import logging
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 
-from app.bot.handlers import start, news, subscriptions
+from app.bot.handlers import start, news, subscriptions, sources
 from app.scheduler.scheduler import start_scheduler
 from config import settings
 
@@ -23,8 +23,9 @@ async def main():
         dp.include_router(start.router)
         dp.include_router(news.router)
         dp.include_router(subscriptions.router)
+        dp.include_router(sources.router)
 
-        start_scheduler()
+        start_scheduler(bot)
 
         try:
             await dp.start_polling(bot)

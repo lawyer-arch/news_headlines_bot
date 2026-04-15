@@ -50,7 +50,6 @@ class SubscriptionService:
 
             return True, f"Подписка на {source_name} добавлена"
 
-
     async def get_user_subscriptions(self, telegram_id: int):
 
         async with async_session() as session:
@@ -65,7 +64,6 @@ class SubscriptionService:
             result = await session.execute(query)
 
             return result.scalars().all()
-
 
     async def unsubscribe(self, telegram_id: int, source_name: str):
 
@@ -90,4 +88,18 @@ class SubscriptionService:
             await session.delete(sub)
             await session.commit()
 
-            return True, f"Подписка на {source_name} удалена"
+            return True, f"Подписка на {source_name} удалена" 
+        
+    async def get_subscribers(self, source_id):
+
+        async with async_session() as session:
+
+            query = (
+                select(User.telegram_id)
+                .join(Subscription)
+                .where(Subscription.source_id == source_id)
+            )
+
+            result = await session.execute(query)
+
+            return result.scalars().all()

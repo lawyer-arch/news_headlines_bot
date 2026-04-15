@@ -3,36 +3,42 @@ import logging
 
 from app.parsers.manager import fetch_all_news
 from app.services.news_service import NewsService
+from app.services.notification_service import NotificationService
+
 
 scheduler = AsyncIOScheduler()
-service = NewsService()
 
 
-async def update_news():
-    try:
-        news = await fetch_all_news()
+def start_scheduler(bot):
 
-        if not news:
-            logging.warning("No news fetched")
-            return
+    news_service = NewsService()
+    notifier = NotificationService(bot)
 
-        await service.save_news(news)
+    async def update_news():
 
-    except Exception as e:
-        logging.exception(f"update_news failed: {e}")
+        try:
 
+            news = await fetch_all_news()
 
-# параметр minutes=10 отвечает за частоту запросов
-def start_scheduler():
+            if not news:
+                logging.warning("No news fetched")
+                return
+
+            new_news = await news_service.save_news(news)
+
+            if new_news:
+                await notifier.send_news(new_news)
+
+        except Exception:
+            logging.exception("update_news failed")
+
     scheduler.add_job(
         update_news,
         "interval",
         minutes=10,
         id="update_news_job",
         replace_existing=True,
-        coalesce=True,
-        max_instances=1,
-        misfire_grace_time=60,
+        max_instances=1
     )
 
     scheduler.start()

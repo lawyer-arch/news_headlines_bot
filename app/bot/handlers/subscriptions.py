@@ -18,10 +18,10 @@ async def subscribe(message: Message):
         await message.answer(
             "Использование:\n"
             "Команда - /subscribe 'источник'\n"
-            "позволяет выбрать подписку на новости\n"
-            "из следующих источников:\n"
+            "позволяет выбрать подписку на\n"
+            "новости из следующих источников:\n"
             "Fox Bussiness, Kommersant, RBK, RIA\n\n"
-            "Пример:\n"
+            "Пример:\n\n"
             "/subscribe rbk, fox_business, kommersant, ria"
         )
         return
