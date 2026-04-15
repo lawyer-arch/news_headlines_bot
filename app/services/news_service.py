@@ -1,6 +1,6 @@
 from sqlalchemy import select
 
-from app.db.session import AsyncSessionLocal
+from app.db.session import async_session
 from app.db.models import News
 
 
@@ -8,7 +8,7 @@ class NewsService:
 
     async def get_latest_news(self, limit=10):
 
-        async with AsyncSessionLocal() as session:
+        async with async_session() as session:
 
             query = (
                 select(News)

@@ -19,5 +19,7 @@ async def get_news(message: Message):
     for n in news_list:
 
         text += f"{n.title}\n{n.url}\n\n"
-
-    await message.answer(text)
+    
+    if text != "":
+        await message.answer(text)
+    await message.answer("Пока новостей нет")

@@ -1,14 +1,17 @@
 import asyncio
+import logging
 
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 
 from app.bot.handlers import start, news
 from app.scheduler.scheduler import start_scheduler
-from app.config import settings
+from config import settings
 
 
 async def main():
+    
+    logging.basicConfig(level=logging.INFO)
     async with Bot(
         token=settings.BOT_TOKEN,
         default=DefaultBotProperties(parse_mode="HTML")
