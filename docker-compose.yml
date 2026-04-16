@@ -1,24 +1,57 @@
-version: "3"
+version: "3.8"
 
 services:
-
   bot:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: news_bot
+    restart: unless-stopped
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     env_file:
-      - .env
+      - .env.docker
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    volumes:
+      - ./app/logs/:/app/app/logs/
+      - ./alembic/versions:/app/alembic/versions
+      - ./app/:/app/app/  # Для разработки - монтирование кода
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; import asyncio; from app.db.session import async_session_maker; async def check_db(): async with async_session_maker() as session: await session.execute('SELECT 1'); asyncio.run(check_db())"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   postgres:
-    image: postgres:15
+    image: postgres:15-alpine
+    container_name: postgres_news
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_DB: news
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
+      TZ: Europe/Moscow
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --locale=en_US.UTF-8"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d news"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backend
 
-  volumes:
-    postgres_data: 
+volumes:
+  postgres_data:
+
+networks:
+  backend:
+    driver: bridge

@@ -1,5 +1,6 @@
 import httpx
-from rss_parser import RSSParser
+import feedparser
+from datetime import datetime
 from app.parsers.base import BaseParser
 
 
@@ -22,26 +23,31 @@ class FoxBusinessParser(BaseParser):
                 return []
 
         try:
-            rss = RSSParser.parse(response.text)
+            feed = feedparser.parse(response.text)
             result = []
 
-            for item in rss.channel.items[:10]:
-
-                title = str(item.title)
-
-                if hasattr(item, 'links') and item.links:
-                    link = str(item.links[0])
-                elif hasattr(item, 'link'):
-                    link = str(item.link)
-                else:
-                    print("Fox Business: ссылка на загаловок не найдена")
-                    continue
-
-                if title and link and title != 'None':
+            for entry in feed.entries[:10]:
+                title = entry.get('title', '').strip()
+                link = entry.get('link', '')
+                
+                # Извлекаем дату публикации
+                published = None
+                if hasattr(entry, 'published_parsed') and entry.published_parsed:
+                    published = datetime(*entry.published_parsed[:6])
+                elif hasattr(entry, 'published'):
+                    # Пробуем распарсить строку с датой
+                    try:
+                        from dateutil import parser
+                        published = parser.parse(entry.published)
+                    except:
+                        pass
+                
+                if title and link:
                     result.append({
                         "title": title,
                         "url": link,
-                        "source": self.source_name
+                        "source": self.source_name,
+                        "published_at": published  # Добавляем дату
                     })
             
             print(f"Fox Business: parsed {len(result)} news")

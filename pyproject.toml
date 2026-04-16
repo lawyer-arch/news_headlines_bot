@@ -19,6 +19,7 @@ dependencies = [
     "psycopg2-binary>=2.9",
     "rss-parser>=2.1.1",
     "feedparser>=6.0.12",
+    "python-dateutil>=2.8.2",
 ]
 
 [project.optional-dependencies]

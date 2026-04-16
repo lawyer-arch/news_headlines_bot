@@ -6,7 +6,9 @@ from aiogram.client.default import DefaultBotProperties
 
 from app.bot.handlers import start, news, subscriptions, sources
 from app.scheduler.scheduler import start_scheduler
+from app.db.init_db import init_db
 from config import settings
+
 
 
 dp = Dispatcher()
@@ -15,6 +17,9 @@ dp = Dispatcher()
 async def main():
 
     logging.basicConfig(level=logging.INFO)
+
+    await init_db()
+    
     async with Bot(
         token=settings.BOT_TOKEN,
         default=DefaultBotProperties(parse_mode="HTML")
